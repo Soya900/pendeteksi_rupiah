@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Pendeteksi Uang Kertas Rupiah</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1>Pendeteksi Nominal Uang Kertas Rupiah</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" accept="image/*" capture="environment" name="gambar" id="upload" hidden onchange="form.submit()">
+        <label for="upload" lang="id" aria-label="Sentuh layar untuk mengambil gambar">Sentuh pada area layar</label>
+    </form>
+</div>
+{% endblock %}

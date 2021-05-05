@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Hasil</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <div class="container">
+        <img src="{{ prediksi[1] }}">
+    </div>
+    <h1>Rp {{ prediksi[0] }}</h1>
+    <audio autoplay>
+        <source src="{{ prediksi[2] }}" type="audio/mpeg">
+    </audio>
+
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" accept="image/*" capture="camera" name="gambar" id="upload" hidden onchange="form.submit()">
+        <label for="upload" lang="id" aria-label="Sentuh layar untuk deteksi ulang">Sentuh layar untuk deteksi
+            ulang</label>
+    </form>
+</div>
+{% endblock %}
