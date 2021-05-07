@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, flash
 from werkzeug.utils import redirect, secure_filename
 import os
 import numpy as np
 import pickle5 as pickle
 import cv2
-import time
 from gtts import gTTS
 
 app = Flask(__name__)
@@ -12,7 +11,7 @@ app = Flask(__name__)
 model_knn = pickle.load(open('modelknn3_5_21.pkl', 'rb'))
 
 UPLOAD_FOLDER = '.\static\images\prediksi'
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG', 'gif', 'GIF'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'JPG', 'JPEG'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -33,14 +32,16 @@ def index():
             flash('No selected file')
             return redirect(request.url)
 
-        # if os.path.isfile(app.config['UPLOAD_FOLDER']):
-        #     os.remove(f for f in os.listdir(app.config['UPLOAD_FOLDER']))
-
         if gambar and allowed_file(gambar.filename):
             ext = gambar.filename.split('.')
             namaGambar = secure_filename('rupiah.' + ext[-1])
-            gambar.save(os.path.join(
+            gambar.save(os.path.join(app.config['UPLOAD_FOLDER'], namaGambar))
+            compress = cv2.imread(os.path.join(
                 app.config['UPLOAD_FOLDER'], namaGambar))
+            compress = cv2.cvtColor(compress, cv2.COLOR_BGR2RGB)
+
+            cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], namaGambar), cv2.cvtColor(
+                compress, cv2.COLOR_BGR2RGB), [cv2.IMWRITE_JPEG_QUALITY, 30])
             return redirect('/hasil')
     else:
         return render_template('index.html')
@@ -48,10 +49,6 @@ def index():
 
 @app.route('/hasil')
 def hasil():
-    # for file in os.listdir(os.path.join(img_folder, dir1)):
-    #     image_path = os.path.join(img_folder, dir1, file)
-    # prediksi = predict(os.path.join(app.config['UPLOAD_FOLDER'], 'rupiah.jpg'))
-
     gambar = [f for f in os.listdir(app.config['UPLOAD_FOLDER'])]
 
     if not gambar:
@@ -62,8 +59,6 @@ def hasil():
         suara = umpan_balik(prediksi)
 
         return render_template('hasil.html', prediksi=[prediksi, os.path.join(app.config['UPLOAD_FOLDER'], gambar[0]), suara])
-    # ret = os.listdir(app.config['UPLOAD_FOLDER'])
-    # return jsonify(ret)
 
 
 @app.route('/serviceworker.js')
@@ -73,7 +68,6 @@ def sw():
 
 def predict(uang):
     panjang, lebar = 200, 200
-    # nominal = ['1000', '10000', '100000', '2000', '20000', '5000', '50000']
     nominal = ['1000', '2000', '5000', '10000', '20000', '50000', '100000']
 
     img = cv2.imread(uang)
