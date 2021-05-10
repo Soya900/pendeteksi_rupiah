@@ -11,7 +11,7 @@ app = Flask(__name__)
 model_knn = pickle.load(open('modelknn3_5_21.pkl', 'rb'))
 
 UPLOAD_FOLDER = './static/images/prediksi'
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'JPG', 'JPEG'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'JPG', 'JPEG', 'png', 'PNG'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
