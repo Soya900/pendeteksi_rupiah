@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 model_knn = pickle.load(open('modelknn3_5_21.pkl', 'rb'))
 
-UPLOAD_FOLDER = '.\static\images\prediksi'
+UPLOAD_FOLDER = './static/images/prediksi'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'JPG', 'JPEG'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -39,9 +39,11 @@ def index():
             compress = cv2.imread(os.path.join(
                 app.config['UPLOAD_FOLDER'], namaGambar))
             compress = cv2.cvtColor(compress, cv2.COLOR_BGR2RGB)
+            compress = cv2.resize(
+                compress, (int(compress.shape[1]/3), int(compress.shape[0]/3)), interpolation=cv2.INTER_AREA)
 
             cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], namaGambar), cv2.cvtColor(
-                compress, cv2.COLOR_BGR2RGB), [cv2.IMWRITE_JPEG_QUALITY, 30])
+                compress, cv2.COLOR_BGR2RGB))
             return redirect('/hasil')
     else:
         return render_template('index.html')
@@ -94,4 +96,4 @@ def umpan_balik(pred, lang='id'):
 #     app.run(host='192.168.100.11', debug=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
