@@ -10,9 +10,6 @@
         <img src="{{ prediksi[1] }}">
     </div>
     <h1>Rp {{ prediksi[0] }}</h1>
-    <audio autoplay>
-        <source src="{{ prediksi[2] }}" type="audio/mpeg">
-    </audio>
 
     <form action="/" method="POST" enctype="multipart/form-data">
         <input type="file" accept="image/*" capture="camera" name="gambar" id="upload" hidden onchange="form.submit()">
@@ -20,4 +17,26 @@
             ulang</label>
     </form>
 </div>
+<script>
+    var audionameslist = `
+        {{ url_for('static', filename='audio/klasifikasi_selesai.mp3') }},
+        {{ prediksi[2] }}
+    `;
+    var audionamesarray = audionameslist.split(',');
+    var audio = new Audio(audionamesarray[0]);
+        
+    audio.src=audionamesarray[0];
+    audio.play();
+
+    index=1;
+    audio.onended = function() {
+        if(index < audionamesarray.length){
+            audio.src=audionamesarray[index];
+            audio.play();
+            index++;
+        } else {
+            audio.removeAttribute();
+        }
+    };
+</script>
 {% endblock %}

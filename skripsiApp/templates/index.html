@@ -8,8 +8,17 @@
 <div class="content">
     <h1>Pendeteksi Nominal Uang Kertas Rupiah</h1>
     <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" accept="image/*" capture="environment" name="gambar" id="upload" hidden onchange="form.submit()">
+        <input type="file" accept="image/*" capture="environment" name="gambar" id="upload" hidden onchange="form.submit()" onclick="playaudio()">
         <label for="upload" lang="id" aria-label="Sentuh layar untuk mengambil gambar">Sentuh pada area layar</label>
     </form>
 </div>
+<script>
+    var audio = new Audio("{{ url_for('static', filename='audio/siap.mp3') }}");
+    audio.play();
+    
+    var playaudio = () => {
+        var audio = new Audio("{{ url_for('static', filename='audio/kamera_siap.mp3') }}");
+        audio.play();
+    };
+</script>
 {% endblock %}

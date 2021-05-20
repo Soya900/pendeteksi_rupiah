@@ -34,7 +34,7 @@ def index():
 
         if gambar and allowed_file(gambar.filename):
             ext = gambar.filename.split('.')
-            namaGambar = secure_filename('rupiah.' + ext[-1])
+            namaGambar = secure_filename('rupiah_' + ext[0] + '.' + ext[-1])
             gambar.save(os.path.join(app.config['UPLOAD_FOLDER'], namaGambar))
             compress = cv2.imread(os.path.join(
                 app.config['UPLOAD_FOLDER'], namaGambar))
@@ -63,6 +63,11 @@ def hasil():
         return render_template('hasil.html', prediksi=[prediksi, os.path.join(app.config['UPLOAD_FOLDER'], gambar[0]), suara])
 
 
+@app.route('/offline')
+def offline():
+    return render_template('offline.html')
+
+
 @app.route('/serviceworker.js')
 def sw():
     return app.send_static_file('serviceworker.js')
@@ -88,12 +93,15 @@ def umpan_balik(pred, lang='id'):
     prediction = pred + 'rupiah'
     language = lang
     myobj = gTTS(text=prediction, lang=language, slow=False)
-    myobj.save(os.path.join(app.config['UPLOAD_FOLDER'], 'zprediksi.mp3'))
-    return os.path.join(app.config['UPLOAD_FOLDER'], 'zprediksi.mp3')
+    nama_gambar = [f for f in os.listdir(app.config['UPLOAD_FOLDER'])]
+    ext = nama_gambar[0].split('.')
+    namaGambar = secure_filename('zpresiksi_' + ext[0] + '.mp3')
+    myobj.save(os.path.join(app.config['UPLOAD_FOLDER'], namaGambar))
+    return f'/static/images/prediksi/{namaGambar}'
 
 
 # if __name__ == "__main__":
 #     app.run(host='192.168.100.11', debug=True)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
