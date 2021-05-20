@@ -63,11 +63,6 @@ def hasil():
         return render_template('hasil.html', prediksi=[prediksi, os.path.join(app.config['UPLOAD_FOLDER'], gambar[0]), suara])
 
 
-@app.route('/offline')
-def offline():
-    return render_template('offline.html')
-
-
 @app.route('/serviceworker.js')
 def sw():
     return app.send_static_file('serviceworker.js')
