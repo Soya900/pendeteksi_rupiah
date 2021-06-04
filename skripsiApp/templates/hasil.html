@@ -12,7 +12,7 @@
     <h1>Rp {{ prediksi[0] }}</h1>
 
     <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" accept="image/*" capture="camera" name="gambar" id="upload" hidden onchange="form.submit()">
+        <input type="file" accept="image/*" capture="camera" name="gambar" id="upload" hidden onchange="form.submit()" onclick="playaudio()">
         <label for="upload" lang="id" aria-label="Sentuh layar untuk deteksi ulang">Sentuh layar untuk deteksi
             ulang</label>
     </form>
@@ -37,6 +37,11 @@
         } else {
             audio.removeAttribute();
         }
+    };
+
+    var playaudio = () => {
+        var audio = new Audio("{{ url_for('static', filename='audio/kamera_siap.mp3') }}");
+        audio.play();
     };
 </script>
 {% endblock %}
